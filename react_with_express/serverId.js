@@ -6,14 +6,20 @@ const port = process.env.PORT || 5000;
 app.listen(port, () => console.log(`Listening on port ${port}`));
 
 var elasticsearch = require('elasticsearch');
+
+app.use(express.json());
+//var bodyParser    = require("body-parser");
+//app.use(bodyParser.json());
+//app.use(bodyParser.urlencoded({extended:true}));
 // create a GET route
-app.get('/express_backend/:id', (req, res) => {
-var childId=req.params.id;
+app.get('/express_backend/', (req, res) => {
+	
 var client = new elasticsearch.Client({
   host: 'localhost:9200',
   log: 'trace'
 });
 
+console.log(req.body);
 client.ping({
   requestTimeout: 30000,
 }, function (error) {
@@ -32,7 +38,7 @@ client.search
   	"_source": "items",
     query: {
       match: {
-        childId: childId
+        childId:  req.body.id
       }
     }
   }
